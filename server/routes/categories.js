@@ -1,5 +1,6 @@
 import express from "express";
 import Category from "../models/category.js";
+import axios from "axios";
 
 const router = express.Router();
 
@@ -10,18 +11,26 @@ router.get("/", (req, res, next) => {
     .catch((error) => console.log(error));
 });
 
-router.post("/", (req, res, next) => {
+router.post("/", async (req, res, next) => {
   const category_name = req.body.category_name;
-  const category = new Category({
-    category_name: category_name,
-  });
-
-  category
-    .save()
+  await axios
+    .get("https://api.datamuse.com/words?max=10&ml=" + category_name)
     .then((result) => {
-      res.send(result);
-    })
-    .catch((error) => console.log(error));
+      const keywords = result.data.map((item) => {
+        return { keyword_name: item.word };
+      });
+      const category = new Category({
+        category_name: category_name,
+        keywords: keywords,
+      });
+
+      category
+        .save()
+        .then((result) => {
+          res.send(result);
+        })
+        .catch((error) => console.log(error));
+    });
 });
 
 router.delete("/:categoryId", (req, res, next) => {
