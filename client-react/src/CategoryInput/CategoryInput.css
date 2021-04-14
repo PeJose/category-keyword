@@ -1,0 +1,70 @@
+.input-overlay {
+  position: fixed;
+  display: none;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  grid-template-columns: 2fr 8fr 2fr;
+  background-color: #03153356;
+}
+
+.input-overlay.active {
+  display: grid;
+}
+
+.input-content {
+  position: absolute;
+  border-radius: 0.15rem;
+  border: 0.2rem solid #fff011;
+  background-color: #031533;
+  top: 50%;
+  left: 50%;
+  display: grid;
+  width: 500px;
+  max-height: 300px;
+  margin: -150px 0 0 -250px;
+  padding: 2rem 1.5rem;
+}
+
+.input-content > .input-title {
+  font-size: 1.75rem;
+  color: white;
+}
+
+.input-close::before {
+  content: "✕";
+}
+
+.input-close {
+  font-size: 1.5rem;
+  position: absolute;
+  top: 1.4rem;
+  right: 1.25rem;
+  cursor: pointer;
+}
+
+.input-button {
+  margin: 1rem 0;
+  padding: 0.8rem 1.2rem;
+  font-weight: bolder;
+  border: none;
+  background-color: #fff011;
+  border-radius: 0.15rem;
+  cursor: pointer;
+  width: 100%;
+}
+
+.input {
+  margin: 1rem 0;
+  border: 0.15rem solid #fff011;
+  border-radius: 0.15rem;
+  height: 1.5rem;
+}
+
+.select {
+  margin: 1rem 0;
+  border: 0.15rem solid #fff011;
+  border-radius: 0.15rem;
+  height: 1.9rem;
+}
