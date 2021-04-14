@@ -4,6 +4,7 @@ import { fileURLToPath } from "url";
 import createError from "http-errors";
 import cookieParser from "cookie-parser";
 import logger from "morgan";
+import cors from "cors";
 
 import indexRouter from "./routes/index.js";
 import categoriesRouter from "./routes/categories.js";
@@ -17,6 +18,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "jade");
 
+app.use(cors());
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
