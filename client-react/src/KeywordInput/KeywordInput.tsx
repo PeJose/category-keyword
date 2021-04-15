@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import axios from "axios";
 import "./KeywordInput.css";
+import api from "../client";
 
 type KeywordsType = {
   _id: number;
@@ -31,6 +31,67 @@ const KeywordInput: Function = ({
     category_id: "",
     keyword_name: "",
   });
+  const [categoryValidator, setCategoryValidator] = useState({
+    class: "empty",
+    text: "",
+  });
+  const [keywordValidator, setKeywordValidator] = useState({
+    class: "empty",
+    text: "",
+  });
+
+  const handleValidation: Function = () => {
+    const categoryEmpty =
+      newKeyword.category_id === "" || newKeyword.category_id === "0";
+    const keywordEmpty = newKeyword.keyword_name === "";
+    const keywordExist = categories.some((item) =>
+      item.keywords.some(
+        (item2) => item2.keyword_name === newKeyword.keyword_name
+      )
+    );
+
+    if (categoryEmpty) {
+      setCategoryValidator({
+        class: "error",
+        text: "This field should not be empty",
+      });
+    } else {
+      setCategoryValidator({
+        class: "empty",
+        text: "",
+      });
+    }
+    if (keywordEmpty) {
+      setKeywordValidator({
+        class: "error",
+        text: "This field should not be empty",
+      });
+    } else if (keywordExist) {
+      setKeywordValidator({
+        class: "warning",
+        text: "This category is already in database",
+      });
+    } else {
+      setKeywordValidator({
+        class: "empty",
+        text: "",
+      });
+    }
+
+    if (!categoryEmpty && !keywordEmpty && !keywordExist) {
+      console.log("empty");
+
+      addKeyword();
+      setCategoryValidator({
+        class: "empty",
+        text: "",
+      });
+      setKeywordValidator({
+        class: "empty",
+        text: "",
+      });
+    }
+  };
 
   const changeNewKeyword: Function = (event: any, type: string) => {
     if (type === "id") {
@@ -42,18 +103,37 @@ const KeywordInput: Function = ({
 
   const addKeyword: Function = () => {
     if (newKeyword.keyword_name.length > 0 && newKeyword.category_id !== "")
-      axios
-        .post("http://localhost:3000/keywords/" + newKeyword.category_id, {
+      api
+        .post("/keywords/" + newKeyword.category_id, {
           keyword_name: newKeyword.keyword_name,
         })
         .then(() => {
-          setNewKeyword({ category_id: "", keyword_name: "" });
-          closeInput();
-          //   setLoading(true);
+          setLoading(true);
+          handleCloseInput();
         })
         .finally(() => fetchCategories())
         .catch((error) => console.log(error));
-    console.log(newKeyword);
+  };
+
+  const handleKeyDown: Function = (event: any) => {
+    if (event.key === "Enter") {
+      addKeyword();
+    } else if (event.key === "Escape") {
+      handleCloseInput();
+    }
+  };
+
+  const handleCloseInput: Function = () => {
+    setNewKeyword({ category_id: "", keyword_name: "" });
+    setCategoryValidator({
+      class: "empty",
+      text: "",
+    });
+    setKeywordValidator({
+      class: "empty",
+      text: "",
+    });
+    closeInput();
   };
 
   let categoryOptions = null;
@@ -64,14 +144,6 @@ const KeywordInput: Function = ({
       </option>
     ));
   }
-
-  const handleKeyDown = (event: any) => {
-    if (event.key === "Enter") {
-      addKeyword();
-    } else if (event.key === "Escape") {
-      closeInput();
-    }
-  };
 
   return (
     <div
@@ -86,7 +158,7 @@ const KeywordInput: Function = ({
           <span
             className="input-close"
             onClick={() => {
-              closeInput();
+              handleCloseInput();
             }}
           ></span>
         </div>
@@ -100,6 +172,9 @@ const KeywordInput: Function = ({
           <option value="0"></option>
           {categoryOptions}
         </select>
+        <span className={categoryValidator.class}>
+          {categoryValidator.text}
+        </span>
         <input
           className="input"
           onChange={(event) => {
@@ -107,10 +182,11 @@ const KeywordInput: Function = ({
           }}
           value={newKeyword.keyword_name}
         ></input>
+        <span className={keywordValidator.class}>{keywordValidator.text}</span>
         <button
           className="input-button"
           onClick={() => {
-            addKeyword();
+            handleValidation();
           }}
         >
           ADD KEYWORD

@@ -1,6 +1,8 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState } from "react";
 import "./App.css";
-import axios from "axios";
+import api from "./client";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import CategoriesList from "./CategoriesList/CategoriesList";
 import CategoryInput from "./CategoryInput/CategoryInput";
@@ -29,21 +31,18 @@ function App() {
     fetchCategories();
   }, []);
 
-  const transitionLoading: Function = () => {
-    setLoadingClass("loading active");
-    setTimeout(() => {
-      setLoading(false);
-      setLoadingClass("loading hide");
-    }, 500);
+  const setLoadingState = (active: boolean) => {
+    setLoading(active);
+    setLoadingClass(active ? "loading active" : "loading hide");
   };
 
   const fetchCategories: Function = () => {
-    axios
-      .get("http://localhost:3000/categories")
+    api
+      .get("/categories")
       .then((result) => {
         const categories = result.data;
         setCategories(categories);
-        transitionLoading();
+        setLoadingState(false);
       })
       .catch((error) => {
         console.log(error);
@@ -72,6 +71,7 @@ function App() {
 
   return (
     <div className="App">
+      <ToastContainer />
       <div className={loadingClass}>
         <p>Loading...</p>
       </div>
@@ -94,7 +94,7 @@ function App() {
               <span className="keywords">keywords</span>
             </div>
             <CategoriesList
-              setLoading={setLoading}
+              setLoading={setLoadingState}
               categories={categories}
               edit={editMode}
               fetchCategories={fetchCategories}
@@ -103,13 +103,14 @@ function App() {
         )}
         <div>
           <CategoryInput
-            setLoading={setLoading}
+            setLoading={setLoadingState}
             fetchCategories={fetchCategories}
+            categories={categories}
             closeInput={closeCategoryInput}
             active={categoryInputActive}
           />
           <KeywordInput
-            setLoading={setLoading}
+            setLoading={setLoadingState}
             fetchCategories={fetchCategories}
             categories={categories}
             closeInput={closeKeywordInput}

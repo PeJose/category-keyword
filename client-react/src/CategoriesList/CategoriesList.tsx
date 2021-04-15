@@ -1,6 +1,7 @@
 import React from "react";
-import axios from "axios";
+import api from "../client";
 import "./CategoriesList.css";
+import { toast } from "react-toastify";
 
 type KeywordsType = {
   _id: number;
@@ -27,26 +28,32 @@ const CategoriesList = ({
   fetchCategories,
 }: CategoriesListProps) => {
   const deleteKeyword: Function = (category_id: string, keyword_id: string) => {
-    axios
-      .delete("http://localhost:3000/keywords/" + category_id, {
+    api
+      .delete("/keywords/" + category_id, {
         data: {
           keyword_id: keyword_id,
         },
       })
-      // .then(setLoading(true))
-      .finally(() => fetchCategories())
+      .then(setLoading(true))
+      .finally(() => {
+        fetchCategories();
+        toast.success("Succesfully deleted keyword!");
+      })
       .catch((error) => console.log(error));
   };
 
   const deleteCategory: Function = (category_id: string) => {
-    axios
-      .delete("http://localhost:3000/categories/" + category_id, {})
-      // .then(setLoading(true))
-      .finally(() => fetchCategories())
+    api
+      .delete("/categories/" + category_id)
+      .then(setLoading(true))
+      .finally(() => {
+        fetchCategories();
+        toast.success("Succesfully deleted category!");
+      })
       .catch((error) => console.log(error));
   };
 
-  const editShake = edit ? " shake" : "";
+  const editShake: string = edit ? " shake" : "";
   let categoriesList = null;
 
   if (categories.length > 0) {

@@ -68,3 +68,21 @@
   border-radius: 0.15rem;
   height: 1.9rem;
 }
+
+.warning {
+  color: coral;
+  display: inline-block;
+  font-size: 0.7rem;
+  margin-top: -0.8rem;
+}
+
+.error {
+  color: orangered;
+  display: inline-block;
+  font-size: 0.7rem;
+  margin-top: -0.8rem;
+}
+
+.empty {
+  display: none;
+}

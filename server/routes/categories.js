@@ -14,7 +14,7 @@ router.get("/", (req, res, next) => {
 router.post("/", async (req, res, next) => {
   const category_name = req.body.category_name;
   await axios
-    .get("https://api.datamuse.com/words?max=10&ml=" + category_name)
+    .get(process.env.OPTIONAL_TASK_URL + "?max=10&ml=" + category_name)
     .then((result) => {
       const keywords = result.data.map((item) => {
         return { keyword_name: item.word };

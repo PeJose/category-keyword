@@ -5,6 +5,9 @@ import createError from "http-errors";
 import cookieParser from "cookie-parser";
 import logger from "morgan";
 import cors from "cors";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 import indexRouter from "./routes/index.js";
 import categoriesRouter from "./routes/categories.js";

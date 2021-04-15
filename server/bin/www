@@ -25,11 +25,10 @@ var server = http.createServer(app);
  */
 import mongoose from "mongoose";
 
-const uri =
-  "mongodb+srv://test_user123:nMPzBx0o1pyYcoJI@cluster0.zvb1a.mongodb.net/categories-keywords?retryWrites=true&w=majority";
+const uri = process.env.DATABASE_MONGO_KEY;
 mongoose
   .connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then((result) => {
+  .then(() => {
     console.log("Connected to DB");
     server.listen(port);
     server.on("error", onError);
