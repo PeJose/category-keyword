@@ -117,7 +117,7 @@ const KeywordInput: Function = ({
 
   const handleKeyDown: Function = (event: any) => {
     if (event.key === "Enter") {
-      addKeyword();
+      handleValidation();
     } else if (event.key === "Escape") {
       handleCloseInput();
     }

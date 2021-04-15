@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
 import api from "./client";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import CategoriesList from "./CategoriesList/CategoriesList";
@@ -31,7 +31,7 @@ function App() {
     fetchCategories();
   }, []);
 
-  const setLoadingState = (active: boolean) => {
+  const setLoadingState: Function = (active: boolean) => {
     setLoading(active);
     setLoadingClass(active ? "loading active" : "loading hide");
   };
